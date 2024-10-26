@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import PlantForm from '../../components/admin/PlantForm';
 import PlantCard from '../../components/admin/PlantCard';

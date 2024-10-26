@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react/prop-types */
+import  { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import api from '../../services/api';
 import { 
@@ -95,7 +96,7 @@ const AdminDashboard = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Vue d'ensemble de votre application
+            {"Vue d'ensemble de votre application"}
           </p>
         </div>
 

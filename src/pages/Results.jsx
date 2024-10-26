@@ -1,4 +1,4 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RefreshCcw, Sun, Home, Clock, Award, ArrowLeft } from 'lucide-react';
 import Header from '../components/layout/Header';
@@ -23,7 +23,7 @@ const Results = () => {
                 Aucun résultat trouvé
               </h2>
               <p className="text-gray-600 mb-8">
-                Il semble que vous n'ayez pas encore complété le questionnaire.
+                {"Il semble que vous n'ayez pas encore complété le questionnaire."}
               </p>
               <button
                 onClick={() => navigate('/questionnaire')}
@@ -124,7 +124,7 @@ const Results = () => {
                   rounded-lg hover:bg-gray-50 transition-all duration-200"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Retour à l'accueil
+                {"Retour à l'accueil"}
               </button>
               <button
                 onClick={() => navigate('/questionnaire')}

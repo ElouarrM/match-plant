@@ -43,7 +43,7 @@ const LoginForm = () => {
             Administration <span className="text-green-600">PlantMatch</span>
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Connectez-vous pour accéder à l'interface d'administration
+            {"Connectez-vous pour accéder à l'interface d'administration"}
           </p>
         </div>
 
@@ -63,7 +63,7 @@ const LoginForm = () => {
             {/* Username Field */}
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-                Nom d'utilisateur
+                {"Nom d'utilisateur"}
               </label>
               <div className="relative rounded-lg">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

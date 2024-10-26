@@ -1,7 +1,7 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
 import PlantCard from './PlantCard';
 import { motion } from 'framer-motion';
-import { Loader2, Leaf } from 'lucide-react';
+import {  Leaf } from 'lucide-react';
 
 const PlantList = ({ plants, isLoading }) => {
   const container = {

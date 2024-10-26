@@ -1,15 +1,25 @@
 /* eslint-disable react/prop-types */
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Initialize authentication state from localStorage
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return !!localStorage.getItem('adminToken');
+  });
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Update authentication state if token exists
+    const token = localStorage.getItem('adminToken');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   const login = async (credentials) => {
     try {
-      // Appel à votre API Django pour l'authentification
       const response = await fetch('http://127.0.0.1:8000/api/admin/login/', {
         method: 'POST',
         headers: {
@@ -23,7 +33,6 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       setUser(data.user);
       setIsAuthenticated(true);
-      // Stocker le token dans localStorage
       localStorage.setItem('adminToken', data.token);
       return true;
     } catch (error) {

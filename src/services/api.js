@@ -1,8 +1,6 @@
-/* eslint-disable no-unused-vars */
 const API_URL = 'http://127.0.0.1:8000/api';
 const BASE_URL = 'http://127.0.0.1:8000';
 
-// Fonction utilitaire pour construire les headers
 const getAuthHeaders = (isFormData = false) => {
   const token = localStorage.getItem('adminToken');
   const headers = {
@@ -16,12 +14,19 @@ const getAuthHeaders = (isFormData = false) => {
   return headers;
 };
 
-// Fonction utilitaire pour gérer les réponses
 const handleResponse = async (response) => {
+  if (response.status === 401) {
+    // Token expired or invalid
+    localStorage.removeItem('adminToken');
+    window.location.reload(); // This will trigger a re-render and redirect to login
+    throw new Error('Session expired');
+  }
+
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.detail || errorData.message || 'Une erreur est survenue');
   }
+  
   return response.json();
 };
 
@@ -63,6 +68,7 @@ const api = {
       throw error;
     }
   },
+
 
   async getAllPlants() {
     try {

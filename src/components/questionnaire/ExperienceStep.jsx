@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import { Sprout, Leaf, TreesIcon } from 'lucide-react';
 
 const ExperienceStep = ({ onSelect, selectedValue }) => {
@@ -64,7 +65,7 @@ const ExperienceStep = ({ onSelect, selectedValue }) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-gray-900 mb-3">
-          Quel est votre niveau d'expérience ?
+          {"Quel est votre niveau d'expérience ?"}
         </h2>
         <p className="text-gray-600">
           Choisissez le niveau qui correspond le mieux à votre expérience en jardinage

@@ -6,9 +6,10 @@ import { LayoutDashboard, Flower2, LogOut, Sprout } from 'lucide-react';
 const AdminLayout = ({ children }) => {
   const { isAuthenticated, logout } = useAuth();
   const location = useLocation();
+  const token = localStorage.getItem('adminToken');
 
-  if (!isAuthenticated) {
-    return <Navigate to="/admin/login" />;
+  if (!token || !isAuthenticated) {
+    return <Navigate to="/admin/login" state={{ from: location }} />;
   }
 
   const navItems = [
@@ -23,6 +24,10 @@ const AdminLayout = ({ children }) => {
       Icon: Flower2
     }
   ];
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
@@ -65,7 +70,7 @@ const AdminLayout = ({ children }) => {
             {/* Logout Button */}
             <div className="flex items-center">
               <button
-                onClick={logout}
+                onClick={handleLogout}
                 className="flex items-center px-4 py-2 rounded-lg text-sm font-medium
                   border-2 border-green-600 text-green-600 hover:bg-green-50 transition-colors"
               >
@@ -77,7 +82,6 @@ const AdminLayout = ({ children }) => {
         </div>
       </nav>
 
-      {/* Main Content */}
       <div className="py-10">
         <main>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

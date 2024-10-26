@@ -1,7 +1,7 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Sprout, Home, Search, Settings } from 'lucide-react';
-import nutriLogo from '../../assets/nutritech.jpg';
 
 const Header = () => {
   const location = useLocation();

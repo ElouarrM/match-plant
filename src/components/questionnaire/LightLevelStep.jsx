@@ -1,4 +1,4 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
 import { Sun, CloudSun, Cloud } from 'lucide-react';
 
 const LightLevelStep = ({ onSelect, selectedValue }) => {
@@ -37,7 +37,7 @@ const LightLevelStep = ({ onSelect, selectedValue }) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-gray-900 mb-3">
-          Quelle est l'exposition lumineuse ?
+          {"Quelle est l'exposition lumineuse ?"}
         </h2>
         <p className="text-gray-600">
           Évaluez la luminosité naturelle de votre espace au cours de la journée

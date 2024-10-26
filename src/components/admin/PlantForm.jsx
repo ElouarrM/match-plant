@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react/prop-types */
+import  { useState } from 'react';
 import { 
   Sun, 
   Droplets, 
@@ -11,35 +12,37 @@ import {
   Upload
 } from 'lucide-react';
 
-export function PlantForm({ onSubmit, initialData = null }) {
-  const [formData, setFormData] = useState({
-    name: initialData?.name || '',
-    scientific_name: initialData?.scientific_name || '',
-    description: initialData?.description || '',
-    light_requirement: initialData?.light_requirement || 'MEDIUM',
-    maintenance_level: initialData?.maintenance_level || 'LOW',
-    watering_frequency: initialData?.watering_frequency || 7,
-    ideal_temperature: initialData?.ideal_temperature || '',
-    image: null
-  });
+const FormField = ({ label, children, icon: Icon, colSpan = 1, helper }) => (
+  <div className={`${colSpan === 2 ? 'sm:col-span-2' : ''} space-y-1.5`}>
+    <label className="block text-sm font-medium text-gray-700">
+      <div className="flex items-center gap-1.5 mb-1.5">
+        {Icon && <Icon className="w-4 h-4 text-gray-400" />}
+        {label}
+      </div>
+    </label>
+    {children}
+    {helper && <p className="text-xs text-gray-500 mt-1">{helper}</p>}
+  </div>
+);
 
+function PlantForm({ onSubmit, initialData = null }) {
+  const [name, setName] = useState(initialData?.name || '');
+  const [scientificName, setScientificName] = useState(initialData?.scientific_name || '');
+  const [description, setDescription] = useState(initialData?.description || '');
+  const [lightRequirement, setLightRequirement] = useState(initialData?.light_requirement || 'MEDIUM');
+  const [maintenanceLevel, setMaintenanceLevel] = useState(initialData?.maintenance_level || 'LOW');
+  const [wateringFrequency, setWateringFrequency] = useState(initialData?.watering_frequency || 7);
+  const [idealTemperature, setIdealTemperature] = useState(initialData?.ideal_temperature || '');
+  const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(initialData?.image || null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    
-    if (type === 'file') {
-      const file = files[0];
-      if (file) {
-        setFormData(prev => ({ ...prev, [name]: file }));
-        setPreviewUrl(URL.createObjectURL(file));
-      }
-    } else if (type === 'number') {
-      setFormData(prev => ({ ...prev, [name]: parseInt(value) || '' }));
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
@@ -49,32 +52,37 @@ export function PlantForm({ onSubmit, initialData = null }) {
     setIsLoading(true);
 
     try {
-      if (!formData.name || !formData.scientific_name) {
+      if (!name || !scientificName) {
         throw new Error('Les champs nom et nom scientifique sont requis');
       }
 
-      if (!formData.watering_frequency || formData.watering_frequency < 1) {
+      if (!wateringFrequency || wateringFrequency < 1) {
         throw new Error("La fréquence d'arrosage doit être supérieure à 0");
       }
 
-      const submitData = {
-        ...formData,
-        watering_frequency: parseInt(formData.watering_frequency)
+      const formData = {
+        name,
+        scientific_name: scientificName,
+        description,
+        light_requirement: lightRequirement,
+        maintenance_level: maintenanceLevel,
+        watering_frequency: parseInt(wateringFrequency),
+        ideal_temperature: idealTemperature,
+        image
       };
 
-      await onSubmit(submitData);
+      await onSubmit(formData);
 
       if (!initialData) {
-        setFormData({
-          name: '',
-          scientific_name: '',
-          description: '',
-          light_requirement: 'MEDIUM',
-          maintenance_level: 'LOW',
-          watering_frequency: 7,
-          ideal_temperature: '',
-          image: null
-        });
+        // Reset form
+        setName('');
+        setScientificName('');
+        setDescription('');
+        setLightRequirement('MEDIUM');
+        setMaintenanceLevel('LOW');
+        setWateringFrequency(7);
+        setIdealTemperature('');
+        setImage(null);
         setPreviewUrl(null);
       }
     } catch (err) {
@@ -84,37 +92,8 @@ export function PlantForm({ onSubmit, initialData = null }) {
     }
   };
 
-  const FormField = ({ label, children, icon: Icon, colSpan = 1, helper }) => (
-    <div className={`${colSpan === 2 ? 'sm:col-span-2' : ''} space-y-1.5`}>
-      <label className="block text-sm font-medium text-gray-700">
-        <div className="flex items-center gap-1.5 mb-1.5">
-          {Icon && <Icon className="w-4 h-4 text-gray-400" />}
-          {label}
-        </div>
-      </label>
-      {children}
-      {helper && (
-        <p className="text-xs text-gray-500 mt-1">{helper}</p>
-      )}
-    </div>
-  );
-
-  const inputClasses = `
-    block w-full rounded-lg border-0 px-3 py-2.5
-    text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 
-    placeholder:text-gray-400
-    focus:ring-2 focus:ring-inset focus:ring-green-600
-    transition-all duration-200
-    bg-white/50 backdrop-blur-sm
-  `;
-
-  const selectClasses = `
-    block w-full rounded-lg border-0 px-3 py-2.5
-    text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200
-    focus:ring-2 focus:ring-inset focus:ring-green-600
-    transition-all duration-200
-    bg-white/50 backdrop-blur-sm
-  `;
+  const inputClasses = "block w-full rounded-lg border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 transition-all duration-200 bg-white/50 backdrop-blur-sm";
+  const selectClasses = "block w-full rounded-lg border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-green-600 transition-all duration-200 bg-white/50 backdrop-blur-sm";
 
   return (
     <form onSubmit={handleSubmit} className="bg-white/50 backdrop-blur-sm rounded-xl shadow-sm p-8">
@@ -135,9 +114,8 @@ export function PlantForm({ onSubmit, initialData = null }) {
         >
           <input
             type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
             placeholder="Ex: Monstera Deliciosa"
             className={inputClasses}
@@ -151,9 +129,8 @@ export function PlantForm({ onSubmit, initialData = null }) {
         >
           <input
             type="text"
-            name="scientific_name"
-            value={formData.scientific_name}
-            onChange={handleChange}
+            value={scientificName}
+            onChange={(e) => setScientificName(e.target.value)}
             required
             placeholder="Ex: Monstera deliciosa"
             className={inputClasses}
@@ -167,13 +144,11 @@ export function PlantForm({ onSubmit, initialData = null }) {
           helper="Description détaillée de la plante"
         >
           <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             rows={3}
             placeholder="Décrivez la plante..."
-            className={inputClasses + " resize-none"}
+            className={`${inputClasses} resize-none`}
           />
         </FormField>
 
@@ -183,9 +158,8 @@ export function PlantForm({ onSubmit, initialData = null }) {
           helper="Besoin en luminosité de la plante"
         >
           <select
-            name="light_requirement"
-            value={formData.light_requirement}
-            onChange={handleChange}
+            value={lightRequirement}
+            onChange={(e) => setLightRequirement(e.target.value)}
             className={selectClasses}
           >
             <option value="LOW">Faible luminosité</option>
@@ -200,9 +174,8 @@ export function PlantForm({ onSubmit, initialData = null }) {
           helper="Niveau de difficulté d'entretien"
         >
           <select
-            name="maintenance_level"
-            value={formData.maintenance_level}
-            onChange={handleChange}
+            value={maintenanceLevel}
+            onChange={(e) => setMaintenanceLevel(e.target.value)}
             className={selectClasses}
           >
             <option value="LOW">Facile</option>
@@ -219,9 +192,8 @@ export function PlantForm({ onSubmit, initialData = null }) {
           <div className="relative">
             <input
               type="number"
-              name="watering_frequency"
-              value={formData.watering_frequency}
-              onChange={handleChange}
+              value={wateringFrequency}
+              onChange={(e) => setWateringFrequency(e.target.value)}
               min="1"
               required
               className={inputClasses}
@@ -239,10 +211,8 @@ export function PlantForm({ onSubmit, initialData = null }) {
         >
           <input
             type="text"
-            name="ideal_temperature"
-            value={formData.ideal_temperature}
-            required
-            onChange={handleChange}
+            value={idealTemperature}
+            onChange={(e) => setIdealTemperature(e.target.value)}
             placeholder="Ex: 18-25°C"
             className={inputClasses}
           />
@@ -267,11 +237,10 @@ export function PlantForm({ onSubmit, initialData = null }) {
                   <label className="cursor-pointer p-2 bg-white/90 rounded-lg hover:bg-white 
                     transition-colors text-sm flex items-center gap-2 text-gray-700">
                     <Upload className="w-4 h-4" />
-                    Changer l'image
+                    {"Changer l'image"}
                     <input
                       type="file"
-                      name="image"
-                      onChange={handleChange}
+                      onChange={handleImageChange}
                       accept="image/*"
                       className="hidden"
                     />
@@ -290,15 +259,14 @@ export function PlantForm({ onSubmit, initialData = null }) {
                       Sélectionner une image
                       <input
                         type="file"
-                        name="image"
-                        onChange={handleChange}
+                        onChange={handleImageChange}
                         accept="image/*"
                         className="sr-only"
                       />
                     </span>
                     <p className="pl-1">ou glisser-déposer</p>
                   </div>
-                  <p className="text-xs leading-5 text-gray-600">PNG, JPG jusqu'à 5MB</p>
+                  <p className="text-xs leading-5 text-gray-600">{"PNG, JPG jusqu'à 5MB"}</p>
                 </div>
               </label>
             )}
