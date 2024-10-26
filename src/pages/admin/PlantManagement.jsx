@@ -47,7 +47,7 @@ const PlantManagement = () => {
       await fetchPlants();
       setShowForm(false);
     } catch (err) {
-      setError('Erreur lors du cration');
+      setError('Erreur lors du création');
     }
   };
 
