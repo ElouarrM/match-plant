@@ -104,10 +104,10 @@ Compte ImgBB (pour la gestion des images)
 ### Backend (Django)
 ```bash
 # Cloner le repository
-git clone [URL_du_repo]
+git clone https://github.com/ElouarrM/match-plant.git
 
 # Configuration de l'environnement
-cd plantmatch_backend
+cd backend
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate     # Windows
@@ -132,7 +132,6 @@ python manage.py runserver
 ### Frontend (React+Vite)
 ```bash
 # Configuration du frontend
-cd plantmatch-frontend
 npm install
 
 # Lancer en développement
