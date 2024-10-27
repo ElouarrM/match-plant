@@ -202,10 +202,31 @@ DELETE /api/plants/{id}/ - Supprimer une plante
 - [ ] Notifications par email
 - [ ] Plus de critères de filtrage
 
+# 📝 Notes Importantes
+
+## Hébergement de l'API
+> ⚠️ **Note concernant l'API:** L'API est actuellement hébergée sur une plateforme gratuite avec des limitations significatives. Si vous rencontrez des problèmes de performances ou de disponibilité, n'hésitez pas à me contacter pour une démonstration locale ou pour discuter d'autres solutions de déploiement.
+
+```
+Contact:
+Email: votre.email@example.com
+LinkedIn: https://www.linkedin.com/in/votre-profil
+```
+
+
+## Design Figma
+> 🎨 **À propos du design Figma:**
+- Le design Figma initial ([voir le design](https://www.figma.com/design/qzhlQ2xL831eLNvCzQtiZ2/PlantMatch?node-id=1669-162202&node-type=canvas)) couvre la partie publique de l'application (accueil, questionnaire, résultats).
+- L'interface administrative est une amélioration que j'ai développée au-delà des exigences initiales du test.
+- En raison des contraintes de temps, le design Figma de la partie administrative n'a pas été réalisé, mais l'implémentation respecte les mêmes principes de design et d'UX que la partie publique.
+
+
 
 ---
 Développé avec ❤️ par Monir EL OUARROUDI
 Pour tout test technique et démonstration de compétences en développement fullstack.
 
-[Lien vers le design Figma](votre_lien_figma)
-[Lien vers la démo](votre_lien_demo)
+## Liens Utiles
+- 🎨 [Design Figma](https://www.figma.com/design/qzhlQ2xL831eLNvCzQtiZ2/PlantMatch?node-id=1669-162202&node-type=canvas)
+- 🌐 [Démo en ligne](https://matchplant.netlify.app/)
+
