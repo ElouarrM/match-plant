@@ -42,6 +42,11 @@ Créer une application web interactive qui :
   - Conditions idéales
 - Option de redémarrage du questionnaire
 
+## Liens Utiles
+- 🎨 [Design Figma](https://www.figma.com/proto/qzhlQ2xL831eLNvCzQtiZ2/PlantMatch?node-id=4368-321106&node-type=canvas&scaling=min-zoom&content-scaling=fixed&page-id=1669%3A162202&starting-point-node-id=4368%3A321106)
+- 🌐 [Démo en ligne](https://matchplant.netlify.app/)
+
+
 ### 👨‍💼 Interface Administrative
 
 #### 1. Authentification
@@ -84,6 +89,7 @@ Créer une application web interactive qui :
 - **Simple JWT** pour l'authentification
 - **Django CORS Headers**
 - Intégration ImgBB API
+- Sqlite
 
 ## ⚙️ Installation et Configuration
 
@@ -226,7 +232,4 @@ LinkedIn: https://www.linkedin.com/in/monir-el-ouarroudi-%E2%98%81%EF%B8%8F-3636
 Développé avec ❤️ par Monir EL OUARROUDI
 Pour tout test technique et démonstration de compétences en développement fullstack.
 
-## Liens Utiles
-- 🎨 [Design Figma]([https://www.figma.com/design/qzhlQ2xL831eLNvCzQtiZ2/PlantMatch?node-id=1669-162202&node-type=canvas](https://www.figma.com/proto/qzhlQ2xL831eLNvCzQtiZ2/PlantMatch?node-id=4368-321106&node-type=canvas&scaling=min-zoom&content-scaling=fixed&page-id=1669%3A162202&starting-point-node-id=4368%3A321106))
-- 🌐 [Démo en ligne](https://matchplant.netlify.app/)
 
