@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from 'react';
 import { 
   Sun, 
@@ -335,7 +336,7 @@ function PlantForm({ onSubmit, initialData = null }) {
                       </span>
                       <p className="pl-1">ou glisser-déposer</p>
                     </div>
-                    <p className="text-xs leading-5 text-gray-600">PNG, JPG jusqu'à 5MB</p>
+                    <p className="text-xs leading-5 text-gray-600">{"PNG, JPG jusqu'à 5MB"}</p>
                   </>
                 )}
               </div>
