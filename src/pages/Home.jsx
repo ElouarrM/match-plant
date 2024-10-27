@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useAnimation, useInView } from 'framer-motion';
