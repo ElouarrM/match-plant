@@ -210,7 +210,7 @@ DELETE /api/plants/{id}/ - Supprimer une plante
 ```
 Contact:
 Email: monir.elouarroudi@example.com
-LinkedIn: [https://www.linkedin.com/in/votre-profil](https://www.linkedin.com/in/monir-el-ouarroudi-%E2%98%81%EF%B8%8F-363601211/)
+LinkedIn: https://www.linkedin.com/in/monir-el-ouarroudi-%E2%98%81%EF%B8%8F-363601211/
 ```
 
 
