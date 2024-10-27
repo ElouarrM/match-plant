@@ -12,8 +12,11 @@ import {
   Upload
 } from 'lucide-react';
 
-// Remplacez par votre clé API ImgBB
-const IMGBB_API_KEY = '90f85061863947571350f6206790ce1a';
+const IMGBB_API_KEY = import.meta.env.VITE_IMGBB_API_KEY;
+
+if (!IMGBB_API_KEY) {
+  console.error('ImgBB API key is not defined in environment variables');
+}
 
 const FormField = ({ label, children, icon: Icon, colSpan = 1, helper }) => (
   <div className={`${colSpan === 2 ? 'sm:col-span-2' : ''} space-y-1.5`}>
