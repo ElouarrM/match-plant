@@ -34,13 +34,13 @@ const PlantCard = ({ plant, onEdit, onDelete }) => {
     <div className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200">
       {/* Image Container */}
       <div className="relative aspect-w-16 aspect-h-9 rounded-t-xl overflow-hidden">
-        <img
-          src={plant.image || defaultImage}
-          alt={plant.name}
-          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-          onError={(e) => {
-            e.target.src = defaultImage;
-          }}
+    <img
+        src={plant.image_url || '/placeholder-plant.jpg'}
+        alt={plant.name}
+        className="w-full h-48 object-cover"
+        onError={(e) => {
+            e.target.src = '/placeholder-plant.jpg';
+        }}
         />
         
         {/* Quick Info Overlay */}

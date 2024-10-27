@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-import  { useState } from 'react';
+import { useState } from 'react';
 import { 
   Sun, 
   Droplets, 
@@ -11,6 +10,9 @@ import {
   Loader2,
   Upload
 } from 'lucide-react';
+
+// Remplacez par votre clé API ImgBB
+const IMGBB_API_KEY = '90f85061863947571350f6206790ce1a';
 
 const FormField = ({ label, children, icon: Icon, colSpan = 1, helper }) => (
   <div className={`${colSpan === 2 ? 'sm:col-span-2' : ''} space-y-1.5`}>
@@ -33,16 +35,69 @@ function PlantForm({ onSubmit, initialData = null }) {
   const [maintenanceLevel, setMaintenanceLevel] = useState(initialData?.maintenance_level || 'LOW');
   const [wateringFrequency, setWateringFrequency] = useState(initialData?.watering_frequency || 7);
   const [idealTemperature, setIdealTemperature] = useState(initialData?.ideal_temperature || '');
-  const [image, setImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(initialData?.image || null);
+  const [imageUrl, setImageUrl] = useState(initialData?.image_url || '');
+  const [previewUrl, setPreviewUrl] = useState(initialData?.image_url || null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
-  const handleImageChange = (e) => {
+  const uploadImageToImgBB = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    try {
+      setIsUploadingImage(true);
+      console.log('Uploading to ImgBB...');
+      
+      const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+        method: 'POST',
+        body: formData
+      });
+
+      console.log('Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('ImgBB error:', errorData);
+        throw new Error('Erreur lors du téléchargement de l\'image');
+      }
+
+      const data = await response.json();
+      console.log('ImgBB response:', data);
+
+      if (data.success) {
+        return data.data.url;
+      } else {
+        throw new Error('Échec du téléchargement de l\'image');
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      throw error;
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(file);
-      setPreviewUrl(URL.createObjectURL(file));
+      try {
+        // Créer une prévisualisation locale immédiate
+        const localPreviewUrl = URL.createObjectURL(file);
+        setPreviewUrl(localPreviewUrl);
+        
+        // Upload l'image vers ImgBB
+        const uploadedUrl = await uploadImageToImgBB(file);
+        console.log('Image uploaded successfully:', uploadedUrl);
+        
+        // Mettre à jour l'URL de l'image
+        setImageUrl(uploadedUrl);
+      } catch (error) {
+        console.error('Error handling image:', error);
+        setError('Erreur lors du téléchargement de l\'image. Veuillez réessayer.');
+        setPreviewUrl(null);
+        setImageUrl('');
+      }
     }
   };
 
@@ -68,9 +123,10 @@ function PlantForm({ onSubmit, initialData = null }) {
         maintenance_level: maintenanceLevel,
         watering_frequency: parseInt(wateringFrequency),
         ideal_temperature: idealTemperature,
-        image
+        image_url: imageUrl // Utiliser l'URL de l'image uploadée
       };
 
+      console.log('Submitting form data:', formData);
       await onSubmit(formData);
 
       if (!initialData) {
@@ -82,16 +138,18 @@ function PlantForm({ onSubmit, initialData = null }) {
         setMaintenanceLevel('LOW');
         setWateringFrequency(7);
         setIdealTemperature('');
-        setImage(null);
+        setImageUrl('');
         setPreviewUrl(null);
       }
     } catch (err) {
+      console.error('Form submission error:', err);
       setError(err.message || 'Une erreur est survenue lors de la sauvegarde');
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Vos classes CSS restent les mêmes
   const inputClasses = "block w-full rounded-lg border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 transition-all duration-200 bg-white/50 backdrop-blur-sm";
   const selectClasses = "block w-full rounded-lg border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-green-600 transition-all duration-200 bg-white/50 backdrop-blur-sm";
 
@@ -219,68 +277,81 @@ function PlantForm({ onSubmit, initialData = null }) {
         </FormField>
 
         <FormField 
-          label="Image" 
-          icon={ImagePlus} 
-          colSpan={2}
-          helper="Format accepté : JPG, PNG (max 5MB)"
-        >
-          <div className="mt-1">
-            {previewUrl ? (
-              <div className="relative group">
-                <img
-                  src={previewUrl}
-                  alt="Prévisualisation"
-                  className="h-40 w-full object-cover rounded-lg border border-gray-200"
-                />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 
-                  transition-opacity duration-200 rounded-lg flex items-center justify-center">
-                  <label className="cursor-pointer p-2 bg-white/90 rounded-lg hover:bg-white 
-                    transition-colors text-sm flex items-center gap-2 text-gray-700">
-                    <Upload className="w-4 h-4" />
-                    {"Changer l'image"}
-                    <input
-                      type="file"
-                      onChange={handleImageChange}
-                      accept="image/*"
-                      className="hidden"
-                    />
-                  </label>
-                </div>
+        label="Image" 
+        icon={ImagePlus} 
+        colSpan={2}
+        helper="Format accepté : JPG, PNG (max 5MB)"
+      >
+        <div className="mt-1">
+          {previewUrl ? (
+            <div className="relative group">
+              <img
+                src={previewUrl}
+                alt="Prévisualisation"
+                className="h-40 w-full object-cover rounded-lg border border-gray-200"
+              />
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 
+                transition-opacity duration-200 rounded-lg flex items-center justify-center">
+                <label className="cursor-pointer p-2 bg-white/90 rounded-lg hover:bg-white 
+                  transition-colors text-sm flex items-center gap-2 text-gray-700">
+                  <Upload className="w-4 h-4" />
+                  {isUploadingImage ? "Téléchargement..." : "Changer l'image"}
+                  <input
+                    type="file"
+                    onChange={handleImageChange}
+                    accept="image/*"
+                    className="hidden"
+                    disabled={isUploadingImage}
+                  />
+                </label>
               </div>
-            ) : (
-              <label className="flex justify-center rounded-lg border-2 border-dashed border-gray-300 
-                px-6 py-10 transition-colors hover:border-gray-400 cursor-pointer">
-                <div className="text-center">
-                  <ImagePlus className="mx-auto h-12 w-12 text-gray-400" />
-                  <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                    <span className="relative cursor-pointer rounded-md font-semibold text-green-600 
-                      focus-within:outline-none focus-within:ring-2 focus-within:ring-green-600 
-                      focus-within:ring-offset-2 hover:text-green-500">
-                      Sélectionner une image
-                      <input
-                        type="file"
-                        onChange={handleImageChange}
-                        accept="image/*"
-                        className="sr-only"
-                      />
-                    </span>
-                    <p className="pl-1">ou glisser-déposer</p>
-                  </div>
-                  <p className="text-xs leading-5 text-gray-600">{"PNG, JPG jusqu'à 5MB"}</p>
-                </div>
-              </label>
-            )}
-          </div>
-        </FormField>
+            </div>
+          ) : (
+            <label className={`flex justify-center rounded-lg border-2 border-dashed 
+              ${isUploadingImage ? 'border-green-300 bg-green-50' : 'border-gray-300'}
+              px-6 py-10 transition-colors hover:border-gray-400 cursor-pointer`}
+            >
+              <div className="text-center">
+                {isUploadingImage ? (
+                  <>
+                    <Loader2 className="mx-auto h-12 w-12 text-green-500 animate-spin" />
+                    <div className="mt-4 text-sm text-green-600">Téléchargement en cours...</div>
+                  </>
+                ) : (
+                  <>
+                    <ImagePlus className="mx-auto h-12 w-12 text-gray-400" />
+                    <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                      <span className="relative cursor-pointer rounded-md font-semibold text-green-600 
+                        focus-within:outline-none focus-within:ring-2 focus-within:ring-green-600 
+                        focus-within:ring-offset-2 hover:text-green-500">
+                        Sélectionner une image
+                        <input
+                          type="file"
+                          onChange={handleImageChange}
+                          accept="image/*"
+                          className="sr-only"
+                          disabled={isUploadingImage}
+                        />
+                      </span>
+                      <p className="pl-1">ou glisser-déposer</p>
+                    </div>
+                    <p className="text-xs leading-5 text-gray-600">PNG, JPG jusqu'à 5MB</p>
+                  </>
+                )}
+              </div>
+            </label>
+          )}
+        </div>
+      </FormField>
       </div>
 
       <div className="flex justify-end mt-8">
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isUploadingImage}
           className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-white
             transition-all duration-200 shadow-sm
-            ${isLoading 
+            ${(isLoading || isUploadingImage)
               ? 'bg-gray-400 cursor-not-allowed' 
               : 'bg-green-600 hover:bg-green-700 hover:shadow'
             }`}

@@ -3,9 +3,38 @@ from django.contrib.auth.models import User
 from .models import Plant, UserPreference
 
 class PlantSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False)
+    image_url = serializers.URLField(required=False)
+
     class Meta:
         model = Plant
-        fields = '__all__'
+        fields = [
+            'id', 
+            'name', 
+            'scientific_name', 
+            'description',
+            'image',
+            'image_url',
+            'light_requirement', 
+            'maintenance_level',
+            'watering_frequency', 
+            'ideal_temperature', 
+            'created_at', 
+            'updated_at'
+        ]
+
+    def to_representation(self, instance):
+        """
+        Surcharge pour gérer la représentation de l'image
+        """
+        ret = super().to_representation(instance)
+        # Si image_url est défini, l'utiliser en priorité
+        if instance.image_url:
+            ret['image'] = instance.image_url
+        # Sinon, si une image est uploadée, utiliser son URL
+        elif instance.image:
+            ret['image'] = instance.image.url if instance.image else None
+        return ret
 
     def validate_watering_frequency(self, value):
         if value < 1:
